@@ -1,8 +1,8 @@
-# Nutanix Rancher UI Driver
-Rancher UI driver for [Nutanix Rancher Node Driver](https://github.com/nutanix/docker-machine)
+# Xen Orchestra Rancher UI Driver
+Rancher UI driver for [Xen Orchestra Rancher Node Driver](https://github.com/Vincent-proginov/docker-machine)
 
 
 Installation
 ------------------------------------------------
 
-Follow the installation guide of the [Nutanix Rancher Node Driver](https://github.com/nutanix/docker-machine/blob/master/README.md#installation)
+Follow the installation guide of the [Xen Orchestra Rancher Node Driver](https://github.com/Vincent-proginov/docker-machine/blob/master/README.md#installation)

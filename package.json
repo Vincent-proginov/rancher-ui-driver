@@ -1,7 +1,7 @@
 {
-  "name": "ui-driver-nutanix",
+  "name": "ui-driver-xen-orchestra",
   "version": "3.2.1",
-  "description": "Nutanix Rancher UI driver for custom docker-machine drivers",
+  "description": "Xen Orchestra Rancher UI driver for custom docker-machine drivers",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/tuxtof/ui-driver-nutanix.git"
