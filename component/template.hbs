@@ -8,21 +8,22 @@
     {{#accordion-list showExpandAll=false as | al expandFn | }}
     {{#accordion-list-item
     title="1. Account Access"
-    detail="Configure to connect to the Nutanix Prism Central Instance"
+    detail="Configure connection to Xen Orchestra"
     expandOnInit=true
     expand=(action expandFn)
     }}
 
     <div class="row">
       <div class="col span-12">
-        <label class="acc-label">Management Endpoint
+        <label class="acc-label">Xen Orchestra URL
           <span class="field-required ember-view">*</span>
         </label>
         {{input type="text"
         class="form-control"
-        value=model.%%DRIVERNAME%%Config.endpoint
+        value=model.%%DRIVERNAME%%Config.xoUrl
+        placeholder="https://xo.example.com"
         }}
-        <p class="help-block">Nutanix Prism Central address</p>
+        <p class="help-block">Xen Orchestra address (including protocol, e.g. https://)</p>
       </div>
 
     </div>
@@ -35,9 +36,8 @@
         {{input
         type="text"
         class="form-control"
-        value=model.%%DRIVERNAME%%Config.username
+        value=model.%%DRIVERNAME%%Config.xoUsername
         }}
-        <p class="help-block">Nutanix management username</p>
       </div>
       <div class="col span-6">
         <label class="acc-label">Password
@@ -46,49 +46,23 @@
         {{input
         type="password"
         class="form-control"
-        value=model.%%DRIVERNAME%%Config.password
+        value=model.%%DRIVERNAME%%Config.xoPassword
         }}
-        <p class="help-block">Nutanix management password</p>
       </div>
     </div>
 
     <div class="col-md-2">
       <div class="checkbox">
-        <label class="acc-label">{{input type="checkbox" checked=model.%%DRIVERNAME%%Config.insecure}}
-          Allow insecure communication to the endpoint
+        <label class="acc-label">{{input type="checkbox" checked=model.%%DRIVERNAME%%Config.xoInsecure}}
+          Allow insecure communication (Skip TLS verification)
         </label>
       </div>
     </div>
 
     {{/accordion-list-item}}
+
     {{#accordion-list-item
-    title="2. Scheduling"
-    detail="Choose what cluster the virtual machine will be scheduled to"
-    expandOnInit=true
-    expand=(action expandFn)
-    }}
-    <div class="row">
-      <div class="col-md-2 form-label">
-        <label class="acc-label">Cluster
-          <span class="field-required ember-view">*</span>
-        </label>
-      </div>
-      <div class="col-md-4">
-        {{input type="text"
-        class="form-control"
-        value=model.%%DRIVERNAME%%Config.cluster
-        }}
-      </div>
-      <div class="col-sm-12 col-md-4">
-        <p class="help-block">The name of the cluster where deploy virtual machine.</p>
-      </div>
-    </div>
-
-
-
-    {{/accordion-list-item}}
-    {{#accordion-list-item
-    title="3. Instance"
+    title="2. Instance"
     detail="Choose the size and OS of the virtual machine"
     expandOnInit=true
     expand=(action expandFn)
@@ -101,23 +75,20 @@
           {{input-integer
           min=1
           max=32
-          value=model.%%DRIVERNAME%%Config.vmCpus
+          value=model.%%DRIVERNAME%%Config.xoVmCpus
           classNames="form-control"
           }}
           <div class="input-group-addon bg-default">
-            {{t "nodeDriver.harvester.cpuCount.unit" cores=config.vmCpus}}
+            {{t "nodeDriver.harvester.cpuCount.unit" cores=config.xoVmCpus}}
           </div>
         </div>
-        <label class="acc-label">{{input type="checkbox" checked=model.%%DRIVERNAME%%Config.vmCpuPassthrough}}
-          Passthrough the host's CPU features to the VM
-        </label>
       </div>
       <div class="col span-6">
         <label class="acc-label">Memory</label>
         <div class="input-group">
           {{input-integer
           min=1
-          value=model.%%DRIVERNAME%%Config.vmMem
+          value=model.%%DRIVERNAME%%Config.xoVmMem
           classNames="form-control"
           }}
           <div class="input-group-addon bg-default">MB</div>
@@ -128,74 +99,21 @@
     <div class="row">
       <div class="col span-6">
         <label class="acc-label">
-          Template Image{{field-required}}
+          Template Name{{field-required}}
         </label>
         {{input type="text"
         class="form-control"
-        value=model.%%DRIVERNAME%%Config.vmImage
+        value=model.%%DRIVERNAME%%Config.xoTemplate
         }}
-        <p class="help-block">The name of the disk image to use as template for the VM</p>
+        <p class="help-block">The name of the template to clone</p>
       </div>
       <div class="col span-6">
-        <label class="acc-label">VM Disk Size</label>
-        <div class="input-group">
-          {{input-integer
-          min=0
-          value=model.%%DRIVERNAME%%Config.vmImageSize
-          classNames="form-control"
-          }}
-          <div class="input-group-addon bg-default">GiB</div>
-        </div>
-        <p class="help-block">Size to extend the template disk. Set this to zero if you don't want to extend
-          it.<br>Recommended if your image is smaller than 40GB</p>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col span-6">
-        <label class="acc-label">Additional Disk Size</label>
-        <div class="input-group">
-          {{input-integer
-          min=0
-          value=model.%%DRIVERNAME%%Config.diskSize
-          classNames="form-control"
-          }}
-          <div class="input-group-addon bg-default">GiB</div>
-        </div>
-        <p class="help-block">Size of the additional disk to be provisioned. Leave to zero if you don't want to
-          provision an extra disk.</p>
-      </div>
-      <div class="col span-6">
-        <label class="acc-label">Storage Container</label>
+        <label class="acc-label">Network</label>
         {{input type="text"
         class="form-control"
-        value=model.%%DRIVERNAME%%Config.storageContainer
+        value=model.%%DRIVERNAME%%Config.xoVmNetwork
         }}
-        <p class="help-block">UUID of the storage container to be used for the additional disk. Leave empty if you don't
-          want to provision an extra disk.</p>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col span-6">
-        <label class="acc-label">Project Name</label>
-        {{input type="text"
-        class="form-control"
-        value=model.%%DRIVERNAME%%Config.project
-        }}
-        <p class="help-block">The name of the project where deploy the VM (default if empty)</p>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col span-6">
-        <label class="acc-label">Boot Configuration: </label>
-        <div class="radio">
-          {{radio-button selection=model.%%DRIVERNAME%%Config.bootType value="legacy"}}
-          Legacy
-          {{radio-button selection=model.%%DRIVERNAME%%Config.bootType value="uefi"}}
-          UEFI
-        </div>
+        <p class="help-block">Network name or UUID to attach to</p>
       </div>
     </div>
 
@@ -207,43 +125,8 @@
       canChangeName=false
       gutters=(array)
       minHeight=500
-      value=model.%%DRIVERNAME%%Config.cloudInit
+      value=model.%%DRIVERNAME%%Config.xoCloudConfig
       }}
-    </div>
-
-    <div class="row">
-      <div class="col span-12">
-        {{form-value-array
-        required=true
-        initialValues=initNetwork
-        valueLabel="clusterNew.googlegke.network.label"
-        addActionLabel="generic.add"
-        valuePlaceholder="generic.name"
-        changed=(action "networkChanged")
-        }}
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col span-12">
-        {{form-key-value
-        allowMultilineValue=false
-        allowEmptyValue=false
-        addActionLabel="generic.add"
-        keyLabel="generic.name"
-        keyPlaceholder="generic.name"
-        valuePlaceholder="value"
-        initialArray=initCategory
-        changedArray=(action "categoryChanged")
-        header= "VM Categories"
-        }}
-      </div>
-    </div>
-
-    <div class="row">
-      <label class="acc-label">{{input type="checkbox" checked=model.%%DRIVERNAME%%Config.vmSerialPort}}
-        Attach a serial port to the VM
-      </label>
     </div>
 
     {{/accordion-list-item}}
